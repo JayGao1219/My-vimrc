@@ -1,4 +1,31 @@
-
+nmap <silent> <c-n> :NERDTreeToggle<CR>
+let g:syntastic_error_symbol='>>'
+let g:syntastic_warning_symbol='>'
+let g:syntastic_check_on_open=1
+let g:syntastic_check_on_wq=0
+let g:syntastic_enable_highlighting=1
+let g:syntastic_python_checkers=['pyflakes'] " 使用pyflakes,速度比pylint快
+let g:syntastic_javascript_checkers = ['jsl', 'jshint']
+let g:syntastic_html_checkers=['tidy', 'jshint']
+" 修改高亮的背景色, 适应主题
+highlight SyntasticErrorSign guifg=white guibg=black
+"添加自动刷新
+set autoread
+" to see error location list
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_loc_list_height = 5
+function! ToggleErrors()
+    let old_last_winnr = winnr('$')
+    lclose
+    if old_last_winnr == winnr('$')
+        " Nothing was closed, open syntastic error location panel
+        Errors
+    endif
+endfunction
+nnoremap <Leader>s :call ToggleErrors()<cr>
+let g:syntastic_always_populate_loc_list = 1
+set foldmethod=indent
 set smartindent
 set tabstop=4
 set shiftwidth=4
@@ -73,8 +100,8 @@ Plugin 'marijnh/tern_for_vim'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'fatih/vim-go'
 Plugin 'SirVer/ultisnips'
-Plugin 'gmarik/Vundle.vim'
 Plugin 'Chiel92/vim-autoformat'
+Plugin 'posva/vim-vue'
 let g:syntastic_javsacript_checkers = ['eslint']
 let javascript_enable_domtumlcss=1
 set clipboard=unnamed
@@ -91,9 +118,14 @@ set backspace=2     " more powerful backspacing
 au BufWrite /private/tmp/crontab.* set nowritebackup nobackup
 " Don't write backup file if vim is being called by "chpass"
 au BufWrite /private/etc/pw.* set nowritebackup nobackup
+map <F1> : !pdflatex % <CR>
+map <F4> : !bibtex %<.aux <CR>
 map <F9> : !g++ % -o %< <CR>
 map <F6> : !./%< <CR>
 map <F5> : !gdb %< <CR>
+map <F2> : !python3.6 % <CR>
+map <F7> : !javac % <CR>
+map <F8> : !java %< <CR>
 " Normally we use vim-extensions. If you want true vi-compatibility
 " remove change the following statements
 set nocompatible" Use Vim defaults instead of 100% vi compatibility
@@ -149,7 +181,10 @@ set encoding=utf-8
 set fileencodings=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936,utf-16,big5,euc-jp,latin1
 " 编码设置
 " 设置颜色主题
-colorscheme molokai
+"colorscheme molokai
+colorscheme desert
+"colorscheme murphy 
+autocmd BufWritePost $MYVIMRC source $MYVIMRC
 set autoindent
 set smartindent
 set guifont=Menlo:h16:cANSI
@@ -206,7 +241,5 @@ nnoremap <C-H> <C-W><C-H>
 "改变当前快捷键
 autocmd filetype *html* imap <c-_> <c-y>/
 autocmd filetype *html* map <c-_> <c-y>/
-imap { {}<ESC>i<CR><ESC>V<O
 noremap <F3> :Autoformat<CR>
-let g:autoformat_verbosemode=1
-au BufWrite * :Autoformat
+
